@@ -1,0 +1,138 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Group {
+  id: Int!
+  name: String!
+  users: [User!]!
+  parentgroup: Group
+  subgroups: [Group!]
+}
+
+type User {
+  id: Int!
+  email: String!
+  groups: [Group!]!
+}
+
+type ReturnGroupResponseDto {
+  statusCode: Int!
+  success: Boolean!
+  message: String!
+  data: Group!
+  stack: String
+}
+
+type Permission {
+  id: Int!
+  usersViewPermissions: [Int!]!
+  groupsViewPermissions: [Int!]
+  publicViewPermission: Boolean!
+  usersEditPermissions: [Int!]!
+  groupEditPermissions: [Int!]
+}
+
+type Tweet {
+  id: Int!
+  content: String!
+  author: User!
+  parentTweet: Tweet
+  hashtag: [String!]!
+  category: String
+  location: String
+  permission: Permission
+  inheritViewPermissions: Boolean!
+  inheritEditPermissions: Boolean!
+}
+
+type CanEditTweetResponseDto {
+  statusCode: Int!
+  success: Boolean!
+  message: String!
+  data: Boolean
+  stack: String
+}
+
+type ReturnTweetResponseDto {
+  statusCode: Int!
+  success: Boolean!
+  message: String!
+  data: Tweet
+  stack: String
+}
+
+type ReturnPaginateTweetsResponseDto {
+  statusCode: Int!
+  success: Boolean!
+  message: String!
+  data: [Tweet!]
+  stack: String
+  total: Int
+  pages: Int
+  hasNextPage: Boolean
+}
+
+type HealthCheckResponse {
+  statusCode: Int!
+  success: Boolean!
+  message: String!
+  data: [Boolean!]
+  stack: String
+}
+
+type Query {
+  healthCheck: HealthCheckResponse!
+  paginateTweets(userId: Int!, page: Int! = 1, limit: Int! = 10, filterTweetDto: FilterTweetDto): ReturnPaginateTweetsResponseDto!
+  canEditTweet(userId: Int!, tweetId: Int!): CanEditTweetResponseDto!
+}
+
+input FilterTweetDto {
+  authorId: Int
+  hashtag: String
+  parentTweetId: Int
+  category: String
+  location: String
+}
+
+type Mutation {
+  createGroup(createGroupsDto: CreateGroupDto!): ReturnGroupResponseDto!
+  createTweet(tweetCreateRequestDto: TweetCreateRequestDto!): ReturnTweetResponseDto!
+  updateTweetaPermission(updateTweetPermissionDto: UpdateTweetPermissionDto!): ReturnTweetResponseDto!
+}
+
+input CreateGroupDto {
+  name: String!
+  userIds: [Int!]!
+  parentGroupId: Int
+}
+
+input TweetCreateRequestDto {
+  authorId: Int!
+  content: String!
+  parentId: Int
+  hashtags: [String!]!
+  category: [String!]
+  location: String
+  usersViewPermissions: [Int!]
+  groupViewPermissions: [Int!]
+  publicViewPermission: Boolean = true
+  usersEditPermissions: [Int!]
+  groupEditPermissions: [Int!]
+}
+
+input UpdateTweetPermissionDto {
+  tweetId: Int!
+  userId: Int!
+  inheritViewPermissions: Boolean
+  inheritEditPermissions: Boolean
+  publicViewPermission: Boolean
+  addUsersViewPermissions: [Int!]
+  addGroupsViewPermissions: [Int!]
+  addUsersEditPermissions: [Int!]
+  addGroupEditPermissions: [Int!]
+  removeUsersViewPermissions: [Int!]
+  removeGroupsViewPermissions: [Int!]
+  removeUsersEditPermissions: [Int!]
+  removeGroupEditPermissions: [Int!]
+}

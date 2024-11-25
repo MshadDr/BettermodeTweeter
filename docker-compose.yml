@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  bettermode-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bettermode-app
+    env_file:
+      - .env
+    ports:
+      - '${PORT:-3030}:${PORT:-3030}' # Bind to the host PORT
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: ${DB_PORT}
+      DATABASE_NAME: ${DB_NAME}
+      DATABASE_USER: ${DB_USERNAME}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres-bettermode
+    networks:
+      - bettermode-network
+    restart: unless-stopped
+
+  postgres-bettermode:
+    image: postgres:14.15-alpine
+    ports:
+      - '5432:5432'
+    container_name: postgres-bettermode
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - bettermode-network
+    restart: unless-stopped
+
+networks:
+  bettermode-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
