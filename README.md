@@ -119,7 +119,9 @@ src/
 ├── groups/          # Group management
 ├── tweets/          # Tweet functionality
 ├── permissions/     # Permission system
-└── common/          # Shared utilities
+├── configs/         # Configs
+├── database/        # Database - Seeds
+└── app/             # Base utilities
 ```
 
 ## 🤝 Contributing
