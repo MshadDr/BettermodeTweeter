@@ -7,6 +7,7 @@ A robust social networking backend built with NestJS, featuring group management
 - **Name**: Mehrshad Darvish
 - **Email**: mshad.darvish@gmail.com
 - **Phone**: +1 (604) 220-2775
+- [Linkedin](https://www.linkedin.com/in/mehrshad-darvish/)
 
 ## 🎥 Project Overview
 
