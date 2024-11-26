@@ -9,6 +9,8 @@ import { TweetsService } from './services/tweets.service';
 import { PermissionsModule } from '../permissions/permissions.module';
 import { PermissionsService } from '../permissions/permissions.service';
 import { TweetPermissionService } from './services/tweet-permission.service';
+import { UsersService } from '../users/users.service';
+import { GroupService } from '../groups/groups.service';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { TweetPermissionService } from './services/tweet-permission.service';
     TweetsService,
     TweetPermissionService,
     PermissionsService,
+    UsersService,
+    GroupService,
   ],
 })
 export class TweetsModule {}

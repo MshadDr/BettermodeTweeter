@@ -12,6 +12,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { TweetCategoriesEnum } from './enums/tweets.categories.enum';
+import { IsOptional } from 'class-validator';
 
 @Entity('tweets')
 @ObjectType()
@@ -35,15 +37,17 @@ export class Tweet {
 
   @ManyToOne(() => Tweet)
   @Field({ nullable: true })
+  @IsOptional()
   parentTweet?: Tweet;
 
   @Column({ type: 'text', array: true, default: [] })
   @Field(() => [String], { defaultValue: [] })
   hashtag: string[];
 
-  @Column({ nullable: true })
+  @Column({ type: 'enum', enum: TweetCategoriesEnum, nullable: true })
   @Field({ nullable: true })
-  category?: string;
+  @IsOptional()
+  category?: TweetCategoriesEnum;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
@@ -55,6 +59,7 @@ export class Tweet {
   })
   @JoinColumn()
   @Field(() => Permission, { nullable: true })
+  @IsOptional()
   permission?: Permission;
 
   @Field({ defaultValue: false })

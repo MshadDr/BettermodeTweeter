@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from './permissions.entity';
 import { Repository } from 'typeorm';
 import { Tweet } from '../tweets/tweets.entity';
-import { Group } from '../groups/groups.entity';
 import { PermissionCreateRequestDto } from './dtos/requests.dto/permission.create.request.dto';
 
 @Injectable()
@@ -11,8 +10,6 @@ export class PermissionsService {
   constructor(
     @InjectRepository(Permission)
     private permissionRepository: Repository<Permission>,
-    @InjectRepository(Tweet) private tweetRepository: Repository<Tweet>,
-    @InjectRepository(Group) private groupRepository: Repository<Group>,
   ) {}
 
   /**

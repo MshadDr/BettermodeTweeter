@@ -1,54 +1,45 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TweetsService } from './tweets.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { TweetsService } from '../services/tweets.service';
 import { Tweet } from '../tweets.entity';
-import { User } from '../../users/users.entity';
-import { Group } from '../../groups/groups.entity';
-import { DataSource } from 'typeorm';
+import { UsersService } from '../../users/users.service';
+import { GroupService } from '../../groups/groups.service';
 import { PermissionsService } from '../../permissions/permissions.service';
 import { NotFoundException } from '@nestjs/common';
-import { TweetCategoriesEnum } from '../enums/tweets.categories.enum';
 
 describe('TweetsService', () => {
   let service: TweetsService;
-  let mockTweetRepository;
-  let mockUserRepository;
-  let mockGroupRepository;
-  let mockPermissionsService;
-  let mockDataSource;
+  let userService: UsersService;
+  let tweetRepository: Repository<Tweet>;
+
+  const mockTweetRepository = {
+    findOne: jest.fn(),
+    save: jest.fn(),
+  };
+
+  const mockUserService = {
+    findUserById: jest.fn(),
+  };
+
+  const mockGroupService = {
+    getUserGroupsIds: jest.fn(),
+  };
+
+  const mockPermissionsService = {
+    determinePermissionCreationStrategy: jest.fn(),
+  };
+
+  const mockDataSource = {
+    transaction: jest.fn((cb) =>
+      cb({
+        save: jest.fn(),
+        findOne: jest.fn(),
+      }),
+    ),
+  };
 
   beforeEach(async () => {
-    mockTweetRepository = {
-      findOne: jest.fn(),
-      save: jest.fn(),
-    };
-
-    mockUserRepository = {
-      findOne: jest.fn(),
-    };
-
-    mockGroupRepository = {
-      find: jest.fn(),
-    };
-
-    mockPermissionsService = {
-      determinePermissionCreationStrategy: jest.fn(),
-    };
-
-    mockDataSource = {
-      transaction: jest.fn((callback) =>
-        callback({
-          save: jest.fn().mockResolvedValue({ id: 1, content: 'Test tweet' }),
-          findOne: jest.fn().mockResolvedValue({
-            id: 1,
-            content: 'Test tweet',
-            author: { id: 1, name: 'Test User' },
-            permission: { id: 1 },
-          }),
-        }),
-      ),
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TweetsService,
@@ -57,12 +48,12 @@ describe('TweetsService', () => {
           useValue: mockTweetRepository,
         },
         {
-          provide: getRepositoryToken(User),
-          useValue: mockUserRepository,
+          provide: UsersService,
+          useValue: mockUserService,
         },
         {
-          provide: getRepositoryToken(Group),
-          useValue: mockGroupRepository,
+          provide: GroupService,
+          useValue: mockGroupService,
         },
         {
           provide: PermissionsService,
@@ -76,6 +67,8 @@ describe('TweetsService', () => {
     }).compile();
 
     service = module.get<TweetsService>(TweetsService);
+    userService = module.get<UsersService>(UsersService);
+    tweetRepository = module.get<Repository<Tweet>>(getRepositoryToken(Tweet));
   });
 
   it('should be defined', () => {
@@ -83,65 +76,55 @@ describe('TweetsService', () => {
   });
 
   describe('createTweet', () => {
-    it('should successfully create a tweet', async () => {
+    it('should create a tweet successfully', async () => {
       const mockUser = { id: 1, name: 'Test User' };
+      const mockTweetDto = {
+        authorId: 1,
+        content: 'Test tweet',
+        publicViewPermission: true,
+        hashtags: [],
+        usersViewPermissions: [],
+        usersEditPermissions: [],
+      };
       const mockPermission = { id: 1 };
-      const mockTweet = {
+      const mockCreatedTweet = {
         id: 1,
         content: 'Test tweet',
         author: mockUser,
         permission: mockPermission,
       };
 
-      const createTweetDto = {
-        content: 'Test tweet',
-        authorId: 1,
-        category: [TweetCategoriesEnum.FINANCE],
-        publicViewPermission: true,
-        usersViewPermissions: [1],
-        usersEditPermissions: [1],
-        groupEditPermissions: [],
-        groupViewPermissions: [],
-        hashtags: [],
-      };
-
-      mockUserRepository.findOne.mockResolvedValue(mockUser);
+      mockUserService.findUserById.mockResolvedValue(mockUser);
       mockPermissionsService.determinePermissionCreationStrategy.mockResolvedValue(
         mockPermission,
       );
-      mockTweetRepository.findOne.mockResolvedValue(mockTweet);
-      mockDataSource.transaction.mockImplementation(async (cb) => {
-        return cb({
-          save: jest.fn().mockResolvedValue(mockTweet),
-          findOne: jest.fn().mockResolvedValue(mockTweet),
+
+      mockDataSource.transaction.mockImplementationOnce(async (cb) => {
+        return await cb({
+          save: jest.fn().mockResolvedValue(mockCreatedTweet),
+          findOne: jest.fn().mockResolvedValue(mockCreatedTweet),
         });
       });
 
-      const result = await service.createTweet(createTweetDto);
+      const result = await service.createTweet(mockTweetDto);
 
-      expect(result).toEqual(mockTweet);
-      expect(mockUserRepository.findOne).toHaveBeenCalled();
-      expect(
-        mockPermissionsService.determinePermissionCreationStrategy,
-      ).toHaveBeenCalled();
+      expect(result).toEqual(mockCreatedTweet);
+      expect(mockUserService.findUserById).toHaveBeenCalledWith(1);
     });
 
-    it('should throw NotFoundException when author is not found', async () => {
-      const createTweetDto = {
-        content: 'Test tweet',
+    it('should throw NotFoundException when author not found', async () => {
+      const mockTweetDto = {
         authorId: 999,
-        category: [TweetCategoriesEnum.FINANCE],
+        content: 'Test tweet',
         publicViewPermission: true,
+        hashtags: [],
         usersViewPermissions: [],
         usersEditPermissions: [],
-        groupEditPermissions: [],
-        groupViewPermissions: [],
-        hashtags: [],
       };
 
-      mockUserRepository.findOne.mockResolvedValue(null);
+      mockUserService.findUserById.mockResolvedValue(null);
 
-      await expect(service.createTweet(createTweetDto)).rejects.toThrow(
+      await expect(service.createTweet(mockTweetDto)).rejects.toThrow(
         NotFoundException,
       );
     });

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   bettermode-app:
     build:
@@ -33,7 +31,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     networks:
       - bettermode-network
     restart: unless-stopped

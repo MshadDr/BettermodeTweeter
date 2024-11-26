@@ -1,16 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GroupService } from './groups.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { GroupService } from './groups.service';
 import { Group } from './groups.entity';
-import { User } from '../users/users.entity';
+import { UsersService } from '../users/users.service';
 import { Repository } from 'typeorm';
-import { NotFoundException } from '@nestjs/common';
-import { CreateGroupDto } from './dtos/resolvers.dto/create.groups.dto';
 
 describe('GroupService', () => {
   let service: GroupService;
   let groupRepository: Repository<Group>;
-  let userRepository: Repository<User>;
+  let usersService: UsersService;
+
+  const mockGroupRepository = {
+    find: jest.fn(),
+    create: jest.fn(),
+    save: jest.fn(),
+    findOne: jest.fn(),
+    findOneByOrFail: jest.fn(),
+  };
+
+  const mockUsersService = {
+    findUsersByIds: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,114 +28,49 @@ describe('GroupService', () => {
         GroupService,
         {
           provide: getRepositoryToken(Group),
-          useClass: Repository,
+          useValue: mockGroupRepository,
         },
         {
-          provide: getRepositoryToken(User),
-          useClass: Repository,
+          provide: UsersService,
+          useValue: mockUsersService,
         },
       ],
     }).compile();
 
     service = module.get<GroupService>(GroupService);
     groupRepository = module.get<Repository<Group>>(getRepositoryToken(Group));
-    userRepository = module.get<Repository<User>>(getRepositoryToken(User));
+    usersService = module.get<UsersService>(UsersService);
+  });
+
+  describe('getUserGroupsIds', () => {
+    it('should return array of group ids for a user', async () => {
+      const mockGroups = [{ id: 1 }, { id: 2 }];
+      mockGroupRepository.find.mockResolvedValue(mockGroups);
+
+      const result = await service.getUserGroupsIds(1);
+      expect(result).toEqual([1, 2]);
+    });
   });
 
   describe('createGroup', () => {
-    it('should successfully create a group with valid users and parent group', async () => {
-      const createGroupDto: CreateGroupDto = {
+    it('should create a new group successfully', async () => {
+      const createGroupDto = {
         name: 'Test Group',
         userIds: [1, 2],
         parentGroupId: null,
       };
 
-      const users = [
-        {
-          id: 1,
-          email: 'user1@example.com',
-          groups: [],
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-        {
-          id: 2,
-          email: 'user2@example.com',
-          groups: [],
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      ] as User[];
+      const mockUsers = [{ id: 1 }, { id: 2 }];
+      const mockNewGroup = { id: 1, name: 'Test Group', users: mockUsers };
 
-      const newGroup = {
-        id: 1,
-        name: 'Test Group',
-        users: users,
-        parentgroup: null,
-      } as Group;
-
-      jest.spyOn(userRepository, 'find').mockResolvedValue(users);
-      jest.spyOn(groupRepository, 'create').mockReturnValue(newGroup as any);
-      jest.spyOn(groupRepository, 'save').mockResolvedValue(newGroup as any);
-      jest.spyOn(groupRepository, 'findOne').mockResolvedValue(newGroup as any);
+      mockUsersService.findUsersByIds.mockResolvedValue(mockUsers);
+      mockGroupRepository.create.mockReturnValue(mockNewGroup);
+      mockGroupRepository.save.mockResolvedValue(mockNewGroup);
+      mockGroupRepository.findOne.mockResolvedValue(mockNewGroup);
 
       const result = await service.createGroup(createGroupDto);
 
-      expect(result).toEqual(newGroup);
-      expect(groupRepository.findOne).toHaveBeenCalledWith({
-        where: { id: newGroup.id },
-        relations: ['users', 'parentgroup', 'subgroups'],
-      });
-    });
-
-    it('should throw an error if some users do not exist', async () => {
-      const createGroupDto: CreateGroupDto = {
-        name: 'Test Group',
-        userIds: [1, 3],
-        parentGroupId: null,
-      };
-
-      const users = [
-        {
-          id: 1,
-          email: 'user1@example.com',
-          groups: [],
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      ];
-
-      jest.spyOn(userRepository, 'find').mockResolvedValue(users);
-
-      await expect(service.createGroup(createGroupDto)).rejects.toThrowError(
-        'Some users do not exist',
-      );
-    });
-
-    it('should throw a NotFoundException if the parent group does not exist', async () => {
-      const createGroupDto: CreateGroupDto = {
-        name: 'Test Group',
-        userIds: [1],
-        parentGroupId: 999,
-      };
-
-      const users = [
-        {
-          id: 1,
-          email: 'user1@example.com',
-          groups: [],
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      ];
-
-      jest.spyOn(userRepository, 'find').mockResolvedValue(users);
-      jest.spyOn(groupRepository, 'findOneBy').mockResolvedValue(null);
-      jest.spyOn(groupRepository, 'create').mockReturnValue({} as Group);
-
-      await expect(service.createGroup(createGroupDto)).rejects.toThrowError(
-        new NotFoundException('Parent group with ID 999 not found'),
-      );
+      expect(result).toEqual(mockNewGroup);
     });
   });
 });

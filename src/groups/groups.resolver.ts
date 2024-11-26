@@ -9,6 +9,11 @@ import { ReturnGroupResponseDto } from './dtos/responses.dto/return.group.respon
 export class GroupResolver {
   constructor(@Inject(GroupService) private groupService: GroupService) {}
 
+  /**
+   * Create a new group
+   * @param CreateGroupDto createGroupDto - The data for creating a new group
+   * @returns ReturnGroupResponseDto - The response data for the created group
+   */
   @Mutation(() => ReturnGroupResponseDto)
   async createGroup(
     @Args('createGroupsDto') createGrouopDto: CreateGroupDto,

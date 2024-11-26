@@ -2,6 +2,17 @@
 
 A robust social networking backend built with NestJS, featuring group management, tweet functionality, and granular permission controls.
 
+## 👤 Author
+
+- **Name**: Mehrshad Darvish
+- **Email**: mshad.darvish@gmail.com
+- **Phone**: +1 (604) 220-2775
+
+## 🎥 Project Overview
+
+Watch the video explanation of this project:
+[Video Link](https://youtu.be/h0XOxBXRxrI)
+
 ## 🌟 Features
 
 - **User Management**: Create and manage user accounts
@@ -52,28 +63,51 @@ cd bettermode
 cp .env.example .env
 ```
 
-3. Configure your `.env` file with appropriate values:
+3. Configure your `.env` file with appropriate values
 
-````
+```
+NODE_ENV={{ NODE_ENV }}
+PORT={{ PORT }}
+DB_LOGGING={{ DB_LOGGING }}
+DB_HOST={{ DB_HOST }}
+DB_PORT={{ DB_PORT }}
+DB_USERNAME={{ DB_USERNAME }}
+DB_PASSWORD={{ DB_PASSWORD }}
+DB_NAME={{DB_NAME}}
 
-### Running the Application
+```
 
-#### Development Mode
+## Running the Application
+
+### Development Mode
+
+#### Start the application in development mode
 
 ```bash
-# Start the application in development mode
 make dev
+----------------------------------------
+This command will:
+1. Build the containers
+2. Start the application
+3. Run migrations
+4. Automatically seed the database with:
+   - Default users
+   - Basic group structure
+```
 
-# Or run commands individually:
-make build      # Build containers
-make start      # Start containers
-make migrate    # Run migrations and seed data
-````
+### Or run commands individually:
 
-#### Production Mode
+make build # Build containers
+make start # Start containers
+make migrate # Run migrations and seed data
 
 ```bash
 make prod
+----------------------------------------
+This command will:
+1. Build the containers
+2. Start the application
+3. Run migrations
 ```
 
 ### Additional Commands
@@ -96,13 +130,71 @@ make truncate-db   # Clear all data
 make reset-db      # Reset and reseed database (dev mode only)
 ```
 
+## GraphQL Endpoints
+
+### Postman Collection
+
+- [Postman Collection](postman/Bettermode.postman_collection.json)
+
+### Queries
+
+- `healthCheck`: Check the health status of the service
+
+  ```graphql
+  healthCheck: HealthCheckResponse!
+  ```
+
+- `paginateTweets`: Get paginated tweets for a user
+
+  ```graphql
+  paginateTweets(
+    userId: Int!,
+    page: Int! = 1,
+    limit: Int! = 10,
+    filterTweetDto: FilterTweetDto
+  ): ReturnPaginateTweetsResponseDto!
+  ```
+
+- `canEditTweet`: Check if a user has permission to edit a tweet
+  ```graphql
+  canEditTweet(
+    userId: Int!,
+    tweetId: Int!
+  ): CanEditTweetResponseDto!
+  ```
+
+### Mutations
+
+- `createGroup`: Create a new group
+
+  ```graphql
+  createGroup(
+    createGroupsDto: CreateGroupDto!
+  ): ReturnGroupResponseDto!
+  ```
+
+- `createTweet`: Create a new tweet
+
+  ```graphql
+  createTweet(
+    tweetCreateRequestDto: TweetCreateRequestDto!
+  ): ReturnTweetResponseDto!
+  ```
+
+- `updateTweetPermission`: Update permissions for a tweet
+  ```graphql
+  updateTweetPermission(
+    updateTweetPermissionDto: UpdateTweetPermissionDto!
+  ): ReturnTweetResponseDto!
+  ```
+
 ## 🧪 Testing
 
 The project includes comprehensive test suites for services, resolvers, and permission logic:
 
 ```bash
 # Run all tests
-npm test
+npm run test
 
 # Run tests with coverage
 npm run test:cov
@@ -138,8 +230,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgments
 
-- NestJS team for the amazing framework
-- The open-source community for inspiration and support
+- BetterMode team for the amazing opportunity
 
 ```
 

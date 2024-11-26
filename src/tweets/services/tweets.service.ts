@@ -1,13 +1,13 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Raw, Repository } from 'typeorm';
-import { User } from '../../users/users.entity';
-import { Group } from '../../groups/groups.entity';
 import { Tweet } from '../tweets.entity';
 import { TweetCreateRequestDto } from '../dtos/requests.dto/tweet.create.request.dto';
 import { PermissionsService } from '../../permissions/permissions.service';
 import { FilterTweetDto } from '../dtos/requests.dto/tweet.filter.request.dto';
 import { Throttle } from '@nestjs/throttler';
+import { GroupService } from '../../groups/groups.service';
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
 export class TweetsService {
@@ -15,10 +15,9 @@ export class TweetsService {
 
   constructor(
     @InjectRepository(Tweet) private tweetRepository: Repository<Tweet>,
-    @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Group)
-    private groupRepository: Repository<Group>,
-    private permissionsService: PermissionsService,
+    private readonly userService: UsersService,
+    private readonly groupService: GroupService,
+    private readonly permissionsService: PermissionsService,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -40,14 +39,7 @@ export class TweetsService {
     pages: number;
     hasNextPage: boolean;
   }> {
-    const userGroups = await this.groupRepository.find({
-      where: { users: { id: userId } },
-      select: {
-        id: true,
-      },
-    });
-
-    const userGroupsIds = userGroups.map((group) => group.id);
+    const userGroupsIds = await this.groupService.getUserGroupsIds(userId);
     const skip = (page - 1) * limit;
 
     // Prepare Where Conditions based on user permissions
@@ -73,9 +65,6 @@ export class TweetsService {
     const filterConditions = filterTweetDto
       ? this.filterConditions(filterTweetDto)
       : [];
-
-    console.log(whereConditions);
-    console.log(filterConditions);
 
     // Fetch Tweets and Total Count to Paginate Results
     const [tweets, total] = await this.tweetRepository.findAndCount({
@@ -127,8 +116,8 @@ export class TweetsService {
 
   /**
    *
-   * @param tweetCreateRequestDto
-   * @returns
+   * @param TweetCreateRequestDto tweetCreateRequestDto
+   * @returns Tweet
    */
   @Throttle({ default: { limit: 3, ttl: 60000 } })
   async createTweet(
@@ -137,13 +126,11 @@ export class TweetsService {
     try {
       return await this.dataSource.transaction(
         async (transactionalEntityManager) => {
-          const { parentId, authorId, category } = tweetCreateRequestDto;
+          const { parentId, authorId } = tweetCreateRequestDto;
 
           // Parallel fetch of author and parent tweet
           const [author, parentTweet] = await Promise.all([
-            this.userRepository.findOne({
-              where: { id: authorId },
-            }),
+            this.userService.findUserById(authorId),
             parentId
               ? this.getTweetWithRelations(parentId)
               : Promise.resolve(null),
@@ -187,7 +174,6 @@ export class TweetsService {
             ...tweetCreateRequestDto,
             author,
             parentTweet,
-            category: category?.join(', ') ?? null,
             permission: createdPermission,
             inheritViewPermissions: !createdPermission,
             inheritEditPermissions: !createdPermission,

@@ -11,6 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 @Entity('groups')
 @ObjectType()
@@ -21,6 +22,8 @@ export class Group {
 
   @Column()
   @Field()
+  @IsNotEmpty()
+  @IsString()
   name: string;
 
   @ManyToMany(() => User, (user) => user.groups)
@@ -30,10 +33,12 @@ export class Group {
 
   @ManyToOne(() => Group, (group) => group.subgroups, { nullable: true })
   @Field(() => Group, { nullable: true })
+  @IsOptional()
   parentgroup?: Group;
 
   @OneToMany(() => Group, (group) => group.parentgroup, { nullable: true })
   @Field(() => [Group], { nullable: true })
+  @IsOptional()
   subgroups?: Group[];
 
   @CreateDateColumn({ type: 'timestamp' })

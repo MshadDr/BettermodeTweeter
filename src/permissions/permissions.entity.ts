@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { IsOptional } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -24,10 +25,12 @@ export class Permission {
 
   @Field(() => [Int], { nullable: true })
   @Column({ type: 'integer', array: true, nullable: true })
+  @IsOptional()
   groupsViewPermissions?: number[];
 
   @Field(() => Boolean, { defaultValue: false })
   @Column({ nullable: true, default: false })
+  @IsOptional()
   publicViewPermission?: boolean;
 
   @Field(() => [Int])
@@ -36,6 +39,7 @@ export class Permission {
 
   @Field(() => [Int], { nullable: true })
   @Column({ type: 'integer', array: true, nullable: true })
+  @IsOptional()
   groupEditPermissions?: number[];
 
   @CreateDateColumn({ type: 'timestamp' })

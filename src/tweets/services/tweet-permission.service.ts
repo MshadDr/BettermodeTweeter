@@ -6,14 +6,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tweet } from '../tweets.entity';
 import { Repository } from 'typeorm';
-import { Group } from '../../groups/groups.entity';
 import { UpdateTweetPermissionDto } from '../dtos/requests.dto/tweet.update.permission.request.dto';
+import { GroupService } from '../../groups/groups.service';
 
 @Injectable()
 export class TweetPermissionService {
   constructor(
     @InjectRepository(Tweet) private tweetRepository: Repository<Tweet>,
-    @InjectRepository(Group) private groupRepository: Repository<Group>,
+    private readonly groupService: GroupService,
   ) {}
 
   /**
@@ -50,6 +50,7 @@ export class TweetPermissionService {
     updateTweetPermissionDto: UpdateTweetPermissionDto,
   ): Promise<Tweet> {
     let newTweet: Tweet = null;
+    // ofcourse we need to check if the user is exist but I am awesome authentication was done
     const { userId, tweetId } = updateTweetPermissionDto;
 
     const tweet = await this.tweetRepository.findOne({
@@ -80,14 +81,7 @@ export class TweetPermissionService {
     userId: number,
     tweet: Tweet,
   ): Promise<boolean> {
-    const userGroups = await this.groupRepository.find({
-      where: { users: { id: userId } },
-      select: {
-        id: true,
-      },
-    });
-
-    const userGroupsIds = userGroups.map((group) => group.id);
+    const userGroupsIds = await this.groupService.getUserGroupsIds(userId);
 
     if (
       tweet.author.id === userId ||

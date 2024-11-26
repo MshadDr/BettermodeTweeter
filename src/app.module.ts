@@ -8,7 +8,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { dbConnectionConfig } from './configs/db.config';
-import { AppResolver } from './app/app.resolver';
+import { AppResolver } from './base/app.resolver';
 
 @Module({
   imports: [

@@ -20,7 +20,7 @@ type ReturnGroupResponseDto {
   statusCode: Int!
   success: Boolean!
   message: String!
-  data: Group!
+  data: Group
   stack: String
 }
 
@@ -112,7 +112,7 @@ input TweetCreateRequestDto {
   content: String!
   parentId: Int
   hashtags: [String!]!
-  category: [String!]
+  category: String
   location: String
   usersViewPermissions: [Int!]
   groupViewPermissions: [Int!]

@@ -1,24 +1,42 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
 import { Group } from './groups.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/users.entity';
 import { CreateGroupDto } from './dtos/resolvers.dto/create.groups.dto';
+import { UsersService } from '../users/users.service';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class GroupService {
   constructor(
     @InjectRepository(Group) private groupRepository: Repository<Group>,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    private readonly userService: UsersService,
   ) {}
 
-  async createGroup(createGroupDto: CreateGroupDto): Promise<Group> {
-    const { userIds, parentGroupId, name } = createGroupDto;
-    const users = await this.userRepository.find({
-      where: {
-        id: In(userIds),
+  /**
+   *
+   * @param number userId
+   * @returns number[] groupsIds
+   */
+  async getUserGroupsIds(userId: number): Promise<number[]> {
+    const groups = await this.groupRepository.find({
+      where: { users: { id: userId } },
+      select: {
+        id: true,
       },
     });
+
+    const groupsIds = groups.map((group) => group.id);
+    return groupsIds;
+  }
+
+  /**
+   *
+   * @param CreateGroupDto createGroupDto
+   * @returns Group group
+   */
+  async createGroup(createGroupDto: CreateGroupDto): Promise<Group> {
+    const { userIds, parentGroupId, name } = createGroupDto;
+    const users = await this.userService.findUsersByIds(userIds);
     if (users.length !== createGroupDto.userIds.length) {
       throw new Error('Some users do not exist');
     }

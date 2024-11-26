@@ -1,0 +1,868 @@
+{
+	"info": {
+		"_postman_id": "7652686c-0bf8-407e-b9fe-c664b34510a9",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12153639"
+	},
+	"item": [
+		{
+			"name": "Paginate Tweets",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Origin",
+						"value": "http://localhost:3030"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\n  paginateTweets(userId: 25, limit:4, page:1, filterTweetDto: {\n    category: \"news\",\n  }) {\n    statusCode\n    success\n    message\n    data {\n      id\n      author {\n        id\n        email\n      }\n      content\n      hashtag\n      category\n      location\n      parentTweet {\n        id\n        content\n      }\n    }\n    total\n    pages\n    hasNextPage\n    stack\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Generated from cURL: curl 'http://localhost:3030/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3030' --data-binary '{\"query\":\"# Write your query or mutation here\\nquery {\\n  indexTweets(userId: 3) {\\n    success\\n    message\\n    data {\\n      id\\n      author {\\n        id\\n        email\\n      }\\n      content\\n      hashtag\\n      category\\n      location\\n      parentTweet {\\n        id\\n        content\\n      }\\n    }\\n  }\\n}\\n\"}' --compressed"
+			},
+			"response": [
+				{
+					"name": "Paginate Tweet success Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate, br"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "DNT",
+								"value": "1"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:3030"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "# Write your query or mutation here\nquery {\n  paginateTweets(userId: 3, limit: 2) {\n    success\n    message\n    data {\n      id\n      author {\n        id\n        email\n      }\n      content\n      hashtag\n      category\n      location\n      parentTweet {\n        id\n        content\n      }\n    }\n    total\n    pages\n    hasNextPage\n  }\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3030/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-store"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "517"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"205-3OHBxywugDK9qmIe+noDZmk60aY\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 25 Nov 2024 07:07:40 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"paginateTweets\": {\n            \"success\": true,\n            \"message\": \"Request is successful\",\n            \"data\": [\n                {\n                    \"id\": 4,\n                    \"author\": {\n                        \"id\": 3,\n                        \"email\": \"alice.garcia@example.com\"\n                    },\n                    \"content\": \"we agree with our managers and work hard like dog\",\n                    \"hashtag\": [],\n                    \"category\": \"NEWS\",\n                    \"location\": \"Totonto\",\n                    \"parentTweet\": null\n                },\n                {\n                    \"id\": 3,\n                    \"author\": {\n                        \"id\": 3,\n                        \"email\": \"alice.garcia@example.com\"\n                    },\n                    \"content\": \"we agree with our managers and work hard like dog\",\n                    \"hashtag\": [],\n                    \"category\": \"NEWS\",\n                    \"location\": \"Totonto\",\n                    \"parentTweet\": null\n                }\n            ],\n            \"total\": 4,\n            \"pages\": 2,\n            \"hasNextPage\": true\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Check Health",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Origin",
+						"value": "http://localhost:3030"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\n  healthCheck{\n    statusCode\n    success\n    message\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/graphql",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Generated from cURL: curl 'http://localhost:3030/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3030' --data-binary '{\"query\":\"query {\\n  healthCheck{\\n    success\\n    message\\n  }\\n}\"}' --compressed"
+			},
+			"response": [
+				{
+					"name": "Check Health Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate, br"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "DNT",
+								"value": "1"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:3030"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  healthCheck{\n    statusCode\n    success\n    message\n  }\n}",
+								"variables": ""
+							},
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/graphql",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-store"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "87"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"57-q/D9quU/CE4wunRzkv4/vY5PCJk\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 26 Nov 2024 00:38:27 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"healthCheck\": {\n            \"statusCode\": 200,\n            \"success\": true,\n            \"message\": \"health is ok...\"\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Can Edit Tweet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Origin",
+						"value": "http://localhost:3030"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query{\n  canEditTweet(userId:25, tweetId: 1) {\n    statusCode\n    success\n    message\n    data\n    stack\n  } \n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Generated from cURL: curl 'http://localhost:3030/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3030' --data-binary '{\"query\":\"query{\\n  canEditTweet(userId:3, tweetId: 33) {\\n    success\\n    message\\n    data\\n  } \\n}\"}' --compressed"
+			},
+			"response": [
+				{
+					"name": "Can Edit Tweet Success Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate, br"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "DNT",
+								"value": "1"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:3030"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query{\n  canEditTweet(userId:25, tweetId: 1) {\n    statusCode\n    success\n    message\n    data\n  } \n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3030/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-store"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "106"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"6a-QKSiX9kMCDXum8QdIQ6aydY1qxE\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 26 Nov 2024 02:22:06 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"canEditTweet\": {\n            \"statusCode\": 200,\n            \"success\": true,\n            \"message\": \"Request is successful\",\n            \"data\": true\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Tweet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Origin",
+						"value": "http://localhost:3030"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "# create tweet with inheritent from his parent\n\nmutation {\n  createTweet(\n    tweetCreateRequestDto: {\n      content: \"we agree with our managers and work hard like dog\"\n      authorId: 25\n      hashtags: [\"vision\", \"family\", \"future\", \"motivation\"]\n      category: \"news\"\n      location: \"Totonto\"\n      usersViewPermissions: [4,5,6,7,8],\n      usersEditPermissions:[4]\n      publicViewPermission: false\n    }\n  ) {\n    statusCode\n    success\n    message\n    data {\n      id\n      content\n      hashtag\n      author {\n        id\n      }\n      permission {\n        id\n        usersViewPermissions\n        usersEditPermissions\n        groupsViewPermissions\n        groupEditPermissions\n      }\n      inheritViewPermissions\n      inheritEditPermissions\n    }\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Generated from cURL: curl 'http://localhost:3030/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3030' --data-binary '{\"query\":\"# create tweet with inheritent from his parent\\n\\nmutation {\\n  createTweet(\\n    tweetCreateRequestDto: {\\n      content: \\\"we agree with our managers and work hard like dog\\\"\\n      authorId: 3\\n      parentId: 9\\n      hashtags: [\\\"vision\\\", \\\"family\\\", \\\"future\\\", \\\"motivation\\\"]\\n      category: \\\"NEWS\\\"\\n      location: \\\"Totonto\\\"\\n      usersViewPermissions: [4,5,6,7,8],\\n      usersEditPermissions:[4]\\n      publicViewPermission: false\\n    }\\n  ) {\\n    success\\n    message\\n    data {\\n      id\\n      content\\n      hashtag\\n      author {\\n        id\\n      }\\n      permission {\\n        id\\n        usersViewPermissions\\n        usersEditPermissions\\n        groupsViewPermissions\\n        groupEditPermissions\\n      }\\n      inheritViewPermissions\\n      inheritEditPermissions\\n    }\\n  }\\n}\\n\"}' --compressed"
+			},
+			"response": [
+				{
+					"name": "Create Tweet Success Rsponse",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate, br"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "DNT",
+								"value": "1"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:3030"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "# create tweet with inheritent from his parent\n\nmutation {\n  createTweet(\n    tweetCreateRequestDto: {\n      content: \"we agree with our managers and work hard like dog\"\n      authorId: 25\n      hashtags: [\"vision\", \"family\", \"future\", \"motivation\"]\n      category: \"news\"\n      location: \"Totonto\"\n      usersViewPermissions: [4,5,6,7,8],\n      usersEditPermissions:[4]\n      publicViewPermission: false\n    }\n  ) {\n    statusCode\n    success\n    message\n    data {\n      id\n      content\n      hashtag\n      author {\n        id\n      }\n      permission {\n        id\n        usersViewPermissions\n        usersEditPermissions\n        groupsViewPermissions\n        groupEditPermissions\n      }\n      inheritViewPermissions\n      inheritEditPermissions\n    }\n  }\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3030/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-store"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "406"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"196-YVq+6Cw/E3zOLcwCGadaviBH11Q\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 26 Nov 2024 02:20:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"createTweet\": {\n            \"statusCode\": 201,\n            \"success\": true,\n            \"message\": \"Request is successful\",\n            \"data\": {\n                \"id\": 23,\n                \"content\": \"we agree with our managers and work hard like dog\",\n                \"hashtag\": [],\n                \"author\": {\n                    \"id\": 25\n                },\n                \"permission\": {\n                    \"id\": 25,\n                    \"usersViewPermissions\": [\n                        4,\n                        5,\n                        6,\n                        7,\n                        8\n                    ],\n                    \"usersEditPermissions\": [\n                        4\n                    ],\n                    \"groupsViewPermissions\": null,\n                    \"groupEditPermissions\": []\n                },\n                \"inheritViewPermissions\": false,\n                \"inheritEditPermissions\": false\n            }\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Group",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Origin",
+						"value": "http://localhost:3030"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation {\n\tcreateGroup(createGroupsDto: {\n    name:\"company consultants\"\n    userIds: [27,28]\n    parentGroupId: 5\n  }) {\n    statusCode\n    success\n    message\n    data {\n      id\n      name\n      users {\n        id\n        email\n      }\n      parentgroup {\n        id\n        name\n      }\n      subgroups {\n        id\n      }\n    }\n    stack\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Generated from cURL: curl 'http://localhost:3030/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3030' --data-binary '{\"query\":\"mutation {\\n\\tcreateGroup(createGroupsDto: {\\n    name:\\\"company consultants\\\"\\n    userIds: []\\n  }) {\\n    success\\n    message\\n    data {\\n      id\\n      name\\n      users {\\n        id\\n        email\\n      }\\n      parentgroup {\\n        id\\n        name\\n      }\\n      subgroups {\\n        id\\n      }\\n    }\\n  }\\n}\"}' --compressed"
+			},
+			"response": [
+				{
+					"name": "Create Group Success Respons",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate, br"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "DNT",
+								"value": "1"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:3030"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n\tcreateGroup(createGroupsDto: {\n    name:\"company consultants\"\n    userIds: [27,28]\n    parentGroupId: 5\n  }) {\n    statusCode\n    statusCode\n    success\n    message\n    data {\n      id\n      name\n      users {\n        id\n        email\n      }\n      parentgroup {\n        id\n        name\n      }\n      subgroups {\n        id\n      }\n    }\n    stack\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3030/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-store"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "324"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"144-f4UjvJ6S1j+PVOnXD2rP8cneSJ4\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 26 Nov 2024 01:11:22 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"createGroup\": {\n            \"statusCode\": 201,\n            \"success\": true,\n            \"message\": \"Group created successfully\",\n            \"data\": {\n                \"id\": 11,\n                \"name\": \"company consultants\",\n                \"users\": [\n                    {\n                        \"id\": 27,\n                        \"email\": \"emma.thomas@example.com\"\n                    },\n                    {\n                        \"id\": 28,\n                        \"email\": \"bob.anderson@example.com\"\n                    }\n                ],\n                \"parentgroup\": {\n                    \"id\": 5,\n                    \"name\": \"Engineering - Team B\"\n                },\n                \"subgroups\": []\n            },\n            \"stack\": null\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Tweet Permission",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Origin",
+						"value": "http://localhost:3030"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation{\n  updateTweetaPermission(updateTweetPermissionDto: {\n    tweetId: 3\n  userId: 25\n  publicViewPermission: true\n  addUsersEditPermissions: [1]\n  removeUsersEditPermissions: [4]\n  }) {\n    statusCode\n    success\n    message\n    data {\n      id\n      content\n      location\n      permission {\n        id\n        usersViewPermissions\n        usersEditPermissions\n        groupsViewPermissions\n        groupEditPermissions\n        publicViewPermission\n      }\n      inheritViewPermissions\n      inheritEditPermissions\n      hashtag\n      category\n    }\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Generated from cURL: curl 'http://localhost:3030/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3030' --data-binary '{\"query\":\"mutation{\\n  updateTweetaPermission(updateTweetPermissionDto: {\\n    tweetId: 33\\n  userId: 3\\n  publicViewPermission: true\\n  addUsersEditPermissions: [1]\\n  removeUsersEditPermissions: [4]\\n  }) {\\n    statusCode\\n    success\\n    message\\n    data {\\n      id\\n      content\\n      location\\n      permission {\\n        id\\n        usersViewPermissions\\n        usersEditPermissions\\n        groupsViewPermissions\\n        groupEditPermissions\\n        publicViewPermission\\n      }\\n      inheritViewPermissions\\n      inheritEditPermissions\\n      hashtag\\n      category\\n    }\\n  }\\n}\"}' --compressed"
+			},
+			"response": [
+				{
+					"name": "Update Tweet Permission Success Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate, br"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "DNT",
+								"value": "1"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:3030"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation{\n  updateTweetaPermission(updateTweetPermissionDto: {\n    tweetId: 33\n  userId: 3\n  publicViewPermission: true\n  addUsersEditPermissions: [1]\n  removeUsersEditPermissions: [4]\n  }) {\n    statusCode\n    success\n    message\n    data {\n      id\n      content\n      location\n      permission {\n        id\n        usersViewPermissions\n        usersEditPermissions\n        groupsViewPermissions\n        groupEditPermissions\n        publicViewPermission\n      }\n      inheritViewPermissions\n      inheritEditPermissions\n      hashtag\n      category\n    }\n  }\n}",
+								"variables": ""
+							},
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3030/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "cache-control",
+							"value": "no-store"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "473"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1d9-/QHGN/Ez3DoNkPq2E8gN3yqPaNw\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 24 Nov 2024 07:42:43 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"updateTweetaPermission\": {\n            \"statusCode\": 200,\n            \"success\": true,\n            \"message\": \"Request is successful\",\n            \"data\": {\n                \"id\": 33,\n                \"content\": \"we agree with our managers and work hard like dog\",\n                \"location\": \"Totonto\",\n                \"permission\": {\n                    \"id\": 28,\n                    \"usersViewPermissions\": [\n                        4,\n                        5,\n                        6,\n                        7,\n                        8,\n                        3\n                    ],\n                    \"usersEditPermissions\": [\n                        1,\n                        1,\n                        3\n                    ],\n                    \"groupsViewPermissions\": null,\n                    \"groupEditPermissions\": [\n                        10\n                    ],\n                    \"publicViewPermission\": true\n                },\n                \"inheritViewPermissions\": false,\n                \"inheritEditPermissions\": false,\n                \"hashtag\": [],\n                \"category\": \"NEWS\"\n            }\n        }\n    }\n}"
+				}
+			]
+		}
+	]
+}

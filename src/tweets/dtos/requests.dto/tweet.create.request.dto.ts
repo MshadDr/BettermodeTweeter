@@ -6,12 +6,14 @@ import {
   IsIn,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { TweetCategoriesEnum } from '../../../tweets/enums/tweets.categories.enum';
+import { BaseDto } from '../../../base/DTO/base.dto';
 
 @InputType()
-export class TweetCreateRequestDto {
+export class TweetCreateRequestDto extends BaseDto {
   @Field(() => Int)
   @IsNumber()
   @IsNotEmpty()
@@ -24,6 +26,7 @@ export class TweetCreateRequestDto {
 
   @Field(() => Int, { nullable: true })
   @IsNumber()
+  @IsOptional()
   parentId?: number;
 
   @Field(() => [String])
@@ -32,19 +35,20 @@ export class TweetCreateRequestDto {
   @IsString({ each: true })
   hashtags: string[];
 
-  @Field(() => [String], { nullable: true })
-  @IsArray()
-  @IsString({ each: true })
+  @Field(() => String, { nullable: true })
+  @IsString()
+  @IsOptional()
   @IsIn([
     TweetCategoriesEnum.NEWS,
     TweetCategoriesEnum.FINANCE,
     TweetCategoriesEnum.SPORT,
     TweetCategoriesEnum.TECH,
   ])
-  category?: TweetCategoriesEnum[];
+  category?: TweetCategoriesEnum;
 
   @Field({ nullable: true })
   @IsString()
+  @IsOptional()
   location?: string;
 
   //==============================permission==============================
@@ -58,6 +62,7 @@ export class TweetCreateRequestDto {
   @IsArray()
   @ArrayNotEmpty()
   @IsNumber({}, { each: true })
+  @IsOptional()
   groupViewPermissions?: number[];
 
   @Field(() => Boolean, { nullable: true, defaultValue: true })
@@ -73,5 +78,6 @@ export class TweetCreateRequestDto {
   @Field(() => [Int], { nullable: true })
   @IsArray()
   @IsNumber({}, { each: true })
+  @IsOptional()
   groupEditPermissions?: number[];
 }

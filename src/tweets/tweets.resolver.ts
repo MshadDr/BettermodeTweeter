@@ -43,8 +43,6 @@ export class TweetsResolver {
         hasNextPage,
       };
     } catch (error) {
-      console.log(error.stack);
-
       return {
         statusCode: HttpStatus.BAD_REQUEST,
         success: false,

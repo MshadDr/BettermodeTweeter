@@ -8,6 +8,9 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UpdateTweetPermissionDto } from '../dtos/requests.dto/tweet.update.permission.request.dto';
 import { Permission } from '../../permissions/permissions.entity';
 import { User } from '../../users/users.entity';
+import { TweetCategoriesEnum } from '../enums/tweets.categories.enum';
+import { GroupService } from '../../groups/groups.service';
+import { UsersService } from '../../users/users.service';
 
 describe('TweetPermissionService', () => {
   let service: TweetPermissionService;
@@ -29,6 +32,19 @@ describe('TweetPermissionService', () => {
           provide: getRepositoryToken(Group),
           useValue: {
             find: jest.fn(),
+          },
+        },
+        {
+          provide: GroupService,
+          useValue: {
+            findOne: jest.fn(),
+            getUserGroupsIds: jest.fn().mockResolvedValue([1]),
+          },
+        },
+        {
+          provide: UsersService,
+          useValue: {
+            findOne: jest.fn(),
           },
         },
       ],
@@ -218,7 +234,7 @@ describe('TweetPermissionService', () => {
         updated_at: new Date(),
         hashtag: [],
         location: '',
-        category: '',
+        category: TweetCategoriesEnum.NEWS,
         parentTweet: null,
         save: jest.fn(),
       } as Tweet;
